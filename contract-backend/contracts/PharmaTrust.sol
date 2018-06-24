@@ -1,4 +1,4 @@
-pragma solidity ^0.4.22;
+pragma solidity ^0.4.24;
 pragma experimental ABIEncoderV2;
 
 
@@ -11,15 +11,38 @@ contract PharmaTrust {
         string comment;
     }
 
-    mapping(bytes32 => Event[]) private eventMappings;
+    struct Product {
+        string name;
+        address company;
+    }
 
-    function recordEvent(string sku, string name, string place, string time, string comment) public {
+    mapping(address => string) private companies;
+    mapping(bytes32 => Product) private products;
+    mapping(bytes32 => Event[]) private events;
+
+    function registerCompany(string name) public {
         address sender = msg.sender;
-        bytes32 hash = sha256(sku);
-        eventMappings[hash].push(Event(name, place, time, sender, comment));
+        companies[sender] = name;
+    }
+
+    function getCompany(address addr) public view returns (string) {
+        return companies[addr];
+    }
+
+    function registerProduct(string sku, string productName, string place, string isotime, string comment) public {
+        address sender = msg.sender;
+        require(bytes(companies[sender]).length != 0, "Company not found");
+        require(bytes(products[sha256(sku)].name).length == 0, "Product already exists");
+        products[sha256(sku)] = Product(productName, sender);
+        events[sha256(sku)].push(Event(string(abi.encodePacked("Manufactured ", productName)), place, isotime, sender, comment));
+    }
+
+    function recordEvent(string sku, string name, string place, string isotime, string comment) public {
+        address sender = msg.sender;
+        events[sha256(sku)].push(Event(name, place, isotime, sender, comment));
     }
 
     function readEvents(string sku) public view returns (Event[]) {
-        return eventMappings[sha256(sku)];
+        return events[sha256(sku)];
     }
 }
