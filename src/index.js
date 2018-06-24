@@ -21,7 +21,8 @@ function Record(props) {
 function Table() {
   return (
     <section>
-      <h1>Blockchain Record</h1>
+      <h1>Blockchain Record: Brain Capacity Enhancer</h1>
+      <h2>ID: 8J9fjqweIl98jAfl09</h2>
       <div class="tbl-header">
         <table cellpadding="0" cellspacing="0" border="0">
           <thead>
