@@ -6,7 +6,7 @@ contract PharmaTrust {
     struct Event {
         string name;
         string place;
-        string time;
+        string isotime;
         address company;
         string comment;
     }
@@ -31,6 +31,11 @@ contract PharmaTrust {
 
     function registerProduct(string sku, string productName, string place, string isotime, string comment) public {
         address sender = msg.sender;
+        // if (a!=0) {
+        //     Log('a', a);
+        //     return;
+        // }
+        // npm i decode-eth
         require(bytes(companies[sender]).length != 0, "Company not found");
         require(bytes(products[sha256(sku)].name).length == 0, "Product already exists");
         products[sha256(sku)] = Product(productName, sender);
@@ -45,4 +50,7 @@ contract PharmaTrust {
     function readEvents(string sku) public view returns (Event[]) {
         return events[sha256(sku)];
     }
+
+    // event Log(string v, uint value);
+    // event LogAddress(string v, address value);
 }

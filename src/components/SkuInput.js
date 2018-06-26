@@ -22,7 +22,9 @@ class Index extends React.Component {
 
   render() {
 
-    const table = this.state.data != null
+    const table = this.state.data === null
+      ? (<p style={{textAlign: 'center'}}>SKU does not exist</p>)
+      : this.state.data != null
       ? (<Table {...this.state.data} />)
       : (<p style={{textAlign: 'center'}}>Input SKU to see item history</p>)
 
